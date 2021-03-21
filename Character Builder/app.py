@@ -1,13 +1,10 @@
 from flask import (Flask, render_template, 
-                   redirect, url_for, request, make_response)
+                   redirect, url_for, request, make_response, flash)
 from options import DEFAULTS
-import webbrowser
-import threading
 import json
 
-port = 8000
-url = "http://127.0.0.1:{}".format(port)
 app = Flask(__name__)
+app.secret_key = "1#234[p;5jonkcnv902354['123i515'3/zcv#,9840[7['AOHJA9sHFA0[934Y5T2-]]"
 
 def get_saved_data():
     try:
@@ -18,25 +15,20 @@ def get_saved_data():
 
 @app.route("/")
 def index():
-    data = get_saved_data()
-    return render_template("index.html", saves=data)
+    stream = models.Post.select().limit(100)
 
 @app.route("/builder")
 def builder():
-    return render_template(
-        "builder.html",
-        saves=get_saved_data(),
-        options=DEFAULTS
-    )
-    
+    return render_template("builder.html", saves=get_saved_data(), options=DEFAULTS)
 
 @app.route("/save", methods=["POST"])
 def save():
+    flash("Alright!")
     response = make_response(redirect(url_for("builder")))
     data = get_saved_data()
     data.update(dict(request.form.items()))
     response.set_cookie("character", json.dumps(data))
     return response
 
-threading.Timer(1.25, lambda: webbrowser.open(url) ).start()
-app.run(debug=True, port=port, host='0.0.0.0')
+
+app.run(host="localhost", port=8000, debug=True)
