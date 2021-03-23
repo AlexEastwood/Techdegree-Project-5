@@ -28,6 +28,7 @@ class Entry(Model):
         except IntegrityError:
             raise ValueError("User already exists")
         
+        
 def initialize():
     DATABASE.connect()
     DATABASE.create_tables([Entry], safe=True)
