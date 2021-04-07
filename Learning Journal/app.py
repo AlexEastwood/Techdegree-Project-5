@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for
+from flask import Flask, render_template, redirect, url_for, flash
 
 import models, forms
 
@@ -21,12 +21,15 @@ def entries():
 @app.route("/entries/new", methods=("GET", "POST"))
 def create_entry():
     form = forms.NewEntry()
-    models.Entry.create(title=form.title.data.strip(),
-                        date=form.date.data.strip(),
-                        time_spent=form.time_spent.data.strip(),
-                        learned=form.learned.data.strip(),
-                        resources=form.resources.data.strip())
-    return render_template("new.html")
+    if form.validate_on_submit():
+        models.Entry.create(title=form.title.data.strip(),
+                            date=form.date.data.strip(),
+                            time_spent=form.time_spent.data.strip(),
+                            learned=form.learned.data.strip(),
+                            resources=form.resources.data.strip())
+        flash("Entry Created!", "success")
+        return redirect(url_for("index"))
+    return render_template("new.html", form=form)
 
 @app.route("/entries/<int:entry_id>")
 def detailed_entry(entry_id):

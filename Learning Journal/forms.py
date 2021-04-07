@@ -9,3 +9,4 @@ class NewEntry(Form):
     time_spent = IntegerField("Time Spent", validators=[DataRequired()])
     learned = StringField("Learned", validators=[DataRequired()])
     resources = StringField("Resources", validators=[DataRequired()])
+    
