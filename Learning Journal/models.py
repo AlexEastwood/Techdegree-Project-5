@@ -10,7 +10,7 @@ class Entry(Model):
     date = DateField(default=datetime.datetime.now)
     time_spent = IntegerField()
     learned = TextField()
-    resources = CharField()
+    resources = TextField()
     
     class Meta:
         database = DATABASE

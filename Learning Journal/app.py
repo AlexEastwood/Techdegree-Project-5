@@ -28,6 +28,8 @@ def create_entry():
                             resources=form.resources.data.strip())
         flash("Entry Created!", "success")
         return redirect(url_for("index"))
+    else:
+        print(form.errors)
     return render_template("new.html", form=form)
 
 @app.route("/entries/<int:entry_id>")
