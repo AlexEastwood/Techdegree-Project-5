@@ -3,7 +3,9 @@
         <input id="date" type="date" name="date">
             {% if field.errors %}
                 {% for errors in field.errors %}
-                    <div class="notification error">{{error}}</div>
+                    <div class="notification error">
+                    {{error}}
+                    </div>
                 {% endfor %}
             {% endif %}
             {{ field(placeholder=field.label.text) }}
