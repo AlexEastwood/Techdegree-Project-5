@@ -22,9 +22,8 @@ def entries():
 def create_entry():
     form = forms.NewEntry()
     if form.validate_on_submit():
-        models.Entry.create(title=form.title.data.strip(),
-                            date=form.date.data.strip(),
-                            time_spent=form.time_spent.data.strip(),
+        models.Entry.create_entry(title=form.title.data.strip(),
+                            time_spent=form.time_spent.data,
                             learned=form.learned.data.strip(),
                             resources=form.resources.data.strip())
         flash("Entry Created!", "success")
