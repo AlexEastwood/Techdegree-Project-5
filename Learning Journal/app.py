@@ -51,7 +51,7 @@ if __name__ == "__main__":
         models.Entry.create_entry(
             title="Test Title",
             time_spent="123",
-            learned="What I learned in boating school is...",
+            learned="What I learned today school is...",
             resources="These are the test resources, This is also a test resource"
         )
     except ValueError:
