@@ -7,15 +7,15 @@
             <h2>New Entry</h2>
             <form method="POST" action="">
                 {{form.hidden_tag()}}
-                <label for="title">Title</label>
+                <label for="title">{{form.title.label}}</label>
                 {{form.title}}
-                <label for="date">Date</label>
+                <label for="date">{{form.date.label}}</label>
                 {{form.date}}
-                <label for="time-spent"> Time Spent</label>
+                <label for="time-spent">{{form.time_spent.label}}</label>
                 {{form.time_spent}}
-                <label for="what-i-learned">What I Learned</label>
+                <label for="what-i-learned">{{form.learned.label}}</label>
                 {{form.learned}}
-                <label for="resources-to-remember">Resources to Remember</label>
+                <label for="resources-to-remember">{{form.resources.label}}</label>
                 {{form.resources}}
                 <input type="submit" value="Publish Entry" class="button">
                 <a href="{{url_for('index')}}" class="button button-secondary">Cancel</a>

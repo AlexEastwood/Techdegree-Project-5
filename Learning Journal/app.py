@@ -1,4 +1,4 @@
-from flask import Flask, render_template, redirect, url_for, flash
+from flask import Flask, render_template, redirect, url_for, flash, request
 
 import models, forms
 
@@ -27,6 +27,7 @@ def create_entry():
                             learned=form.learned.data.strip(),
                             resources=form.resources.data.strip())
         flash("Entry Created!", "success")
+        print(form)
         return redirect(url_for("index"))
     else:
         print(form.errors)
@@ -37,10 +38,20 @@ def detailed_entry(entry_id):
     entry = models.Entry.get(models.Entry.entry_id==entry_id)
     return render_template("detail.html", entry=entry)
 
-@app.route("/entries/<int:entry_id>/edit")
+@app.route("/entries/<int:entry_id>/edit", methods=("GET", "POST"))
 def edit_entry(entry_id):
     entry = models.Entry.get(models.Entry.entry_id==entry_id)
-    return render_template("edit.html", entry=entry)
+    form = forms.NewEntry()
+    if form.validate_on_submit():
+        entry.title = form.title.data
+        entry.date = form.date.data
+        entry.time_spent = form.time_spent.data
+        entry.learned = form.learned.data
+        entry.resources = form.resources.data
+        entry.save()
+        flash("Saved Entry", "success")
+        return redirect(url_for("index"))
+    return render_template("edit.html", entry=entry, form=form)
 
 @app.route("/entries/<int:id>/delete")
 def delete_entry():
@@ -53,7 +64,7 @@ if __name__ == "__main__":
         models.Entry.create_entry(
             title="Test Title",
             time_spent="123",
-            learned="What I learned today school is...",
+            learned="What I learned today is...",
             resources="These are the test resources, This is also a test resource"
         )
     except ValueError:
