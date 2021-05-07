@@ -14,9 +14,9 @@
                 <label for="time-spent">{{form.time_spent.label}}</label>
                 {{form.time_spent(value=entry.time_spent)}}
                 <label for="what-i-learned">{{form.learned.label}}</label>
-                <textarea>{{entry.learned}}</textarea>
+                <textarea id="learned" name="learned" required="">{{entry.learned}}</textarea>
                 <label for="resources-to-remember">{{form.resources.label}}</label>
-                <textarea>{{entry.resources}}</textarea>
+                <textarea id="resources" name="resources" required="">{{entry.resources}}</textarea>
                 <input type="submit" value="Publish Entry" class="button">
                 <a href="{{url_for('index')}}" class="button button-secondary">Cancel</a>
             </form>
@@ -25,4 +25,4 @@
 </section>
 {% endblock content %}
         
-       
+        
