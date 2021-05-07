@@ -42,15 +42,18 @@ def detailed_entry(entry_id):
 def edit_entry(entry_id):
     entry = models.Entry.get(models.Entry.entry_id==entry_id)
     form = forms.NewEntry()
-    if form.validate_on_submit():
-        entry.title = form.title.data
-        entry.date = form.date.data
-        entry.time_spent = form.time_spent.data
-        entry.learned = form.learned.data
-        entry.resources = form.resources.data
-        entry.save()
-        flash("Saved Entry", "success")
-        return redirect(url_for("index"))
+    if request.method == 'POST':
+        if request.form["button"] == "Delete":
+            entry.delete_instance()
+            return redirect(url_for('index'))
+        elif form.validate_on_submit():
+            entry.title = form.title.data
+            entry.date = form.date.data
+            entry.time_spent = form.time_spent.data
+            entry.learned = form.learned.data
+            entry.resources = form.resources.data
+            entry.save()
+            return redirect(url_for("index"))
     return render_template("edit.html", entry=entry, form=form)
 
 @app.route("/entries/<int:id>/delete")
