@@ -6,7 +6,7 @@ from datetime import datetime
 
 class NewEntry(FlaskForm):
     title = StringField("Title", validators=[DataRequired()])
-    date = DateField("Date", format="%Y-%m-%d", default=datetime.today,
+    date = DateField("Date", format="%d/%m/%Y", default=datetime.today,
                      validators=[Optional()])
     time_spent = IntegerField("Time Spent", validators=[DataRequired()])
     learned = TextAreaField("Learned", validators=[DataRequired()])

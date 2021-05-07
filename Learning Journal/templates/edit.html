@@ -10,7 +10,7 @@
                 <label for="title">{{form.title.label}}</label>
                 {{form.title(value=entry.title)}}
                 <label for="date">{{form.date.label}}</label>
-                {{form.date(value=entry.date)}}
+                {{form.date(value=entry.date.strftime("%d/%m/%Y"))}}
                 <label for="time-spent">{{form.time_spent.label}}</label>
                 {{form.time_spent(value=entry.time_spent)}}
                 <label for="what-i-learned">{{form.learned.label}}</label>
