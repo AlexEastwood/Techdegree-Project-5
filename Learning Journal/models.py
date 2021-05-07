@@ -4,6 +4,7 @@ import datetime
 
 DATABASE = SqliteDatabase("journal.db")
 
+
 class Entry(Model):
     entry_id = AutoField()
     title = CharField(unique=True)
@@ -11,10 +12,10 @@ class Entry(Model):
     time_spent = IntegerField()
     learned = TextField()
     resources = TextField()
-    
+
     class Meta:
         database = DATABASE
-        
+
     @classmethod
     def create_entry(cls, title, time_spent, learned, resources):
         try:
@@ -27,7 +28,7 @@ class Entry(Model):
                     )
         except IntegrityError:
             raise ValueError("Entry already exists")
-        
+
 
 def initialize():
     DATABASE.connect()
