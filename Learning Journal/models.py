@@ -28,9 +28,21 @@ class Entry(Model):
                     )
         except IntegrityError:
             raise ValueError("Entry already exists")
+        
+class Tag(Model):
+    tag_name = CharField(unique=True)
+    
+    class Meta:
+        database = DATABASE
 
+class EntryTags(Model):
+    entry = ForeignKeyField(Entry)
+    tag = ForeignKeyField(Tag)
+    
+    class Meta:
+        database = DATABASE
 
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([Entry], safe=True)
+    DATABASE.create_tables([Entry, Tag, EntryTags], safe=True)
     DATABASE.close()
