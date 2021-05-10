@@ -18,8 +18,8 @@ class Entry(Model):
         
     def get_tags(self):
         return (
-            EntryTags.select().join(
-                Entry, on=EntryTags.entry
+            Tag.select().join(
+                EntryTags, on=EntryTags.tag
             ).where(
                 EntryTags.entry == self
             )
@@ -57,7 +57,7 @@ class Tag(Model):
 
 class EntryTags(Model):
     entry = ForeignKeyField(Entry)
-    tag = ForeignKeyField(Tag)
+    tag = ForeignKeyField()
     
     class Meta:
         database = DATABASE

@@ -26,8 +26,13 @@
                 <div class="entry">
                     <h3>Tags:</h3>
                     <ul>
-                        <li>{{entry.get_tags()}}</li>
+                    {% for tag in entry.get_tags() %}
+                    <li>
+                        {{tag.tag_name}}
+                    </li>
+                    {% endfor %}
                     </ul>
+                    
                 </div>
             </article>
         </div>

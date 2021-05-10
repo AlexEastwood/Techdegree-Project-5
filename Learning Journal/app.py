@@ -10,6 +10,20 @@ HOST = "localhost"
 app = Flask(__name__)
 app.secret_key = "0a9s8dyfnsd87906asd087-09D86Yd-89gasd-G--84y5bpkzfgh#'flgjsd"
 
+def set_tags(tags, title):
+    
+    tags = tags.split(", ")
+    for tag in tags:
+        print(tag)
+        try:
+            Tag.create_entry(tag_name=tag)
+        except ValueError:
+            print("That tag already exists")
+            
+        EntryTags.create(
+            entry=Entry.get(Entry.title == title),
+            tag=Tag.get(Tag.tag_name == tag)
+        )
 
 @app.route("/")
 def index():
@@ -31,21 +45,8 @@ def create_entry():
                                   learned=form.learned.data.strip(),
                                   resources=form.resources.data.strip())
         if form.tags.data:
-            tags = form.tags.data
-            tags = tags.split(", ")
-            for tag in tags:
-                print(tag)
-                try:
-                    Tag.create_entry(tag_name=tag)
-                except ValueError:
-                    print("That tag already exists")
-                    
-                EntryTags.create(
-                    entry=Entry.get(Entry.title == form.title.data.strip()),
-                    tag=Tag.get(Tag.tag_name == tag)
-                )
-                
-            
+            set_tags(form.tags.data, form.title.data.strip())
+
         return redirect(url_for("index"))
     else:
         print(form.errors)
@@ -61,6 +62,11 @@ def detailed_entry(entry_id):
 @app.route("/entries/<int:entry_id>/edit", methods=("GET", "POST"))
 def edit_entry(entry_id):
     entry = Entry.get(Entry.entry_id == entry_id)
+    
+    tags = ""
+    for tag in entry.get_tags():
+        tags = tags + tag.tag_name +", "
+    tags = tags[:-2]
     form = forms.NewEntry()
     if request.method == 'POST':
         if request.form["button"] == "Delete":
@@ -73,8 +79,11 @@ def edit_entry(entry_id):
             entry.learned = form.learned.data
             entry.resources = form.resources.data
             entry.save()
+            
+            if form.tags.data:
+                set_tags(form.tags.data, form.title.data.strip())
             return redirect(url_for("index"))
-    return render_template("edit.html", entry=entry, form=form)
+    return render_template("edit.html", entry=entry, form=form, tags=tags)
 
 
 @app.route("/entries/<int:id>/delete")

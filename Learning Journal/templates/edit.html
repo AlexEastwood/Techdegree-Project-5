@@ -17,6 +17,8 @@
                 <textarea id="learned" name="learned" required="">{{entry.learned}}</textarea>
                 <label for="resources-to-remember">{{form.resources.label}}</label>
                 <textarea id="resources" name="resources" required="">{{entry.resources}}</textarea>
+                <label for="tags">{{form.tags.label}}</label>
+                {{form.tags(value=tags)}}
                 <input type="submit" name="button" value="Publish Entry" class="button">
                 <a href="{{url_for('index')}}" class="button button-secondary">Cancel</a>
                 <input style="background:red;border:red" type="submit" name="button" value="Delete" class="button">
