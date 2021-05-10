@@ -18,12 +18,13 @@ class Entry(Model):
         
     def get_tags(self):
         return (
-            Entry.select().join(
-                EntryTags, on=EntryTags.entry
+            EntryTags.select().join(
+                Entry, on=EntryTags.entry
             ).where(
                 EntryTags.entry == self
             )
         )
+        
 
     @classmethod
     def create_entry(cls, title, time_spent, learned, resources):
