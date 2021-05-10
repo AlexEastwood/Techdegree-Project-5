@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, flash, request
 
-from models import Entry, Tag, initialize
+from models import Entry, Tag, EntryTags, initialize
 import forms
 
 DEBUG = True
@@ -34,10 +34,16 @@ def create_entry():
             tags = form.tags.data
             tags = tags.split(", ")
             for tag in tags:
+                print(tag)
                 try:
                     Tag.create_entry(tag_name=tag)
                 except ValueError:
-                    pass
+                    print("That tag already exists")
+                    
+                EntryTags.create(
+                    entry=Entry.get(Entry.title == form.title.data.strip()),
+                    tag=Tag.get(Tag.tag_name == tag)
+                )
                 
             
         return redirect(url_for("index"))

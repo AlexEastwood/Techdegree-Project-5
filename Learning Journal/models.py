@@ -15,6 +15,15 @@ class Entry(Model):
 
     class Meta:
         database = DATABASE
+        
+    def get_tags(self):
+        return (
+            Entry.select().join(
+                EntryTags, on=EntryTags.entry
+            ).where(
+                EntryTags.entry == self
+            )
+        )
 
     @classmethod
     def create_entry(cls, title, time_spent, learned, resources):
@@ -28,6 +37,7 @@ class Entry(Model):
                     )
         except IntegrityError:
             raise ValueError("Entry already exists")
+
         
 class Tag(Model):
     tag_name = CharField(unique=True)
