@@ -34,6 +34,15 @@ class Tag(Model):
     
     class Meta:
         database = DATABASE
+        
+    @classmethod
+    def create_entry(cls, tag_name):
+        try:
+            with DATABASE.transaction():
+                cls.create(
+                    tag_name=tag_name)
+        except IntegrityError:
+            raise ValueError("Entry already exists")
 
 class EntryTags(Model):
     entry = ForeignKeyField(Entry)

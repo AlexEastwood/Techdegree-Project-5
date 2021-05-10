@@ -10,4 +10,5 @@ class NewEntry(FlaskForm):
                      validators=[Optional()])
     time_spent = IntegerField("Time Spent", validators=[DataRequired()])
     learned = TextAreaField("Learned", validators=[DataRequired()])
-    resources = TextAreaField("Resources", validators=[DataRequired()])
+    resources = TextAreaField("Resources (separate with a comma)", validators=[DataRequired()])
+    tags = StringField("Tags (separate with a comma)", validators=[Optional()])

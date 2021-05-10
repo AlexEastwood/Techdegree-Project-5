@@ -30,8 +30,16 @@ def create_entry():
                                   time_spent=form.time_spent.data,
                                   learned=form.learned.data.strip(),
                                   resources=form.resources.data.strip())
-        flash("Entry Created!", "success")
-        print(form)
+        if form.tags.data:
+            tags = form.tags.data
+            tags = tags.split(", ")
+            for tag in tags:
+                try:
+                    Tag.create_entry(tag_name=tag)
+                except ValueError:
+                    pass
+                
+            
         return redirect(url_for("index"))
     else:
         print(form.errors)
