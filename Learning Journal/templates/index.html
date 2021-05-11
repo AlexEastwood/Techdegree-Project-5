@@ -10,7 +10,7 @@
                 <time datetime="{{entry.date}}">{{entry.date.strftime("%d/%m/%Y")}}</time>
                 <h4>
                 {% for tag in entry.get_tags() %}
-                <a href="#">{{tag.tag_name}}</a>
+                <a href="{{url_for("tag_index", tag=tag.tag_name)}}">{{tag.tag_name}}</a>
                 {% endfor %}
                 </h4>
             </article>

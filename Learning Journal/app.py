@@ -42,6 +42,16 @@ def entries():
     return index()
 
 
+@app.route("/entries/<tag>")
+def tag_index(tag):
+    entries = []
+    for entry in EntryTags.select():
+        if entry.tag.tag_name == tag:
+            entries.append(entry.entry)
+        
+    return (render_template("index.html", entries=entries))
+
+
 @app.route("/entries/new", methods=("GET", "POST"))
 def create_entry():
     form = forms.NewEntry()
