@@ -57,7 +57,7 @@ class Tag(Model):
 
 class EntryTags(Model):
     entry = ForeignKeyField(Entry)
-    tag = ForeignKeyField()
+    tag = ForeignKeyField(Tag)
     
     class Meta:
         database = DATABASE
