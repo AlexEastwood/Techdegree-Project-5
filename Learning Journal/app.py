@@ -3,6 +3,7 @@ from flask import Flask, render_template, redirect, url_for, flash, request
 from models import Entry, Tag, EntryTags, initialize
 import forms
 
+#Variables for hosting the website locally
 DEBUG = True
 PORT = 8000
 HOST = "localhost"
@@ -10,7 +11,12 @@ HOST = "localhost"
 app = Flask(__name__)
 app.secret_key = "0a9s8dyfnsd87906asd087-09D86Yd-89gasd-G--84y5bpkzfgh#'flgjsd"
 
+#Deletes all tags currently associated with an entry, then writes the new set of tags
 def set_tags(tags, title):
+    
+    EntryTags.delete().where(
+        EntryTags.entry == Entry.get(
+            Entry.title == title)).execute()
     
     tags = tags.split(", ")
     for tag in tags:
@@ -19,7 +25,7 @@ def set_tags(tags, title):
             Tag.create_entry(tag_name=tag)
         except ValueError:
             print("That tag already exists")
-            
+
         EntryTags.create(
             entry=Entry.get(Entry.title == title),
             tag=Tag.get(Tag.tag_name == tag)
@@ -84,11 +90,6 @@ def edit_entry(entry_id):
                 set_tags(form.tags.data, form.title.data.strip())
             return redirect(url_for("index"))
     return render_template("edit.html", entry=entry, form=form, tags=tags)
-
-
-@app.route("/entries/<int:id>/delete")
-def delete_entry():
-    pass
 
 if __name__ == "__main__":
     initialize()

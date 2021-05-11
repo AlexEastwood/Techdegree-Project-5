@@ -8,6 +8,11 @@
             <article>
                 <h2><a href="{{url_for('detailed_entry', entry_id=entry.entry_id)}}">{{entry.title}}</a></h2>
                 <time datetime="{{entry.date}}">{{entry.date.strftime("%d/%m/%Y")}}</time>
+                <h4>
+                {% for tag in entry.get_tags() %}
+                <a href="#">{{tag.tag_name}}</a>
+                {% endfor %}
+                </h4>
             </article>
             {% endfor %}
             
