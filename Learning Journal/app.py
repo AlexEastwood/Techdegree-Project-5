@@ -1,5 +1,5 @@
 from flask import Flask, render_template, redirect, url_for, flash, request
-
+from flask_login import login_required
 from models import Entry, Tag, EntryTags, initialize
 import forms
 
@@ -53,6 +53,7 @@ def tag_index(tag):
 
 
 @app.route("/entries/new", methods=("GET", "POST"))
+@login_required
 def create_entry():
     form = forms.NewEntry()
     if form.validate_on_submit():
@@ -64,8 +65,6 @@ def create_entry():
             set_tags(form.tags.data, form.title.data.strip())
 
         return redirect(url_for("index"))
-    else:
-        print(form.errors)
     return render_template("new.html", form=form)
 
 
@@ -76,6 +75,7 @@ def detailed_entry(entry_id):
 
 
 @app.route("/entries/<int:entry_id>/edit", methods=("GET", "POST"))
+@login_required
 def edit_entry(entry_id):
     entry = Entry.get(Entry.entry_id == entry_id)
     
