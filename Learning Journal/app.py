@@ -49,7 +49,7 @@ def set_tags(tags, title):
 @app.route("/")
 def index():
     entries = Entry.select()
-
+    # Log in the user so they can view the protected views
     try:
         user = User.get(User.username == "alexeastwood")
         login_user(user)
@@ -66,8 +66,11 @@ def entries():
     return index()
 
 
+# Same as the index page but filters to only the
+# selected tag
 @app.route("/entries/<tag>")
 def tag_index(tag):
+    
     entries = []
     for entry in EntryTags.select():
         if entry.tag.tag_name == tag:
