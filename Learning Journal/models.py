@@ -1,4 +1,5 @@
 from peewee import *
+from flask_login import UserMixin
 import datetime
 
 DATABASE = SqliteDatabase("journal.db")
@@ -60,8 +61,30 @@ class EntryTags(Model):
     
     class Meta:
         database = DATABASE
+        
+class User(UserMixin, Model):
+    user_id = AutoField()
+    username = CharField(unique=True)
+    password = CharField()
+    
+    class Meta:
+        database = DATABASE
+        
+    def get_id(self):
+           return (self.user_id)
+        
+    @classmethod
+    def create_user(cls, username, password):
+        try:
+            with DATABASE.transaction():
+                cls.create(
+                    username=username,
+                    password=password
+                )
+        except IntegrityError:
+            raise ValueError("User already exists")
 
 def initialize():
     DATABASE.connect()
-    DATABASE.create_tables([Entry, Tag, EntryTags], safe=True)
+    DATABASE.create_tables([Entry, Tag, EntryTags, User], safe=True)
     DATABASE.close()

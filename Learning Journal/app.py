@@ -1,6 +1,6 @@
 from flask import Flask, render_template, redirect, url_for, flash, request
-import flask_login
-from models import Entry, Tag, EntryTags, initialize
+from flask_login import LoginManager, login_user, login_required
+from models import Entry, Tag, EntryTags, initialize, User, DoesNotExist
 import forms
 
 #Variables for hosting the website locally
@@ -10,6 +10,17 @@ HOST = "localhost"
 
 app = Flask(__name__)
 app.secret_key = "0a9s8dyfnsd87906asd087-09D86Yd-89gasd-G--84y5bpkzfgh#'flgjsd"
+
+login_manager = LoginManager()
+login_manager.init_app(app)
+login_manager.login_view = "index"
+
+@login_manager.user_loader
+def load_user(user_id):
+    try: 
+        User.get(User.user_id == user_id)
+    except DoesNotExist:
+        return None
 
 #Deletes all tags currently associated with an entry, then writes the new set of tags
 def set_tags(tags, title):
@@ -34,6 +45,10 @@ def set_tags(tags, title):
 @app.route("/")
 def index():
     entries = Entry.select()
+    
+    user = User.get(User.username == "alexeastwood")
+    login_user(user)
+    
     return (render_template("index.html", entries=entries))
 
 
@@ -53,6 +68,7 @@ def tag_index(tag):
 
 
 @app.route("/entries/new", methods=("GET", "POST"))
+@login_required
 def create_entry():
     form = forms.NewEntry()
     if form.validate_on_submit():
@@ -74,6 +90,7 @@ def detailed_entry(entry_id):
 
 
 @app.route("/entries/<int:entry_id>/edit", methods=("GET", "POST"))
+@login_required
 def edit_entry(entry_id):
     entry = Entry.get(Entry.entry_id == entry_id)
     
@@ -112,5 +129,17 @@ if __name__ == "__main__":
     except ValueError:
         pass
     
+    try:
+        User.create_user(
+            username="alexeastwood",
+            password="password"
+        )
+    except ValueError:
+        print("You exist")
+    else:
+        print("You didn't exist but now you do")
+    
+    
+
 
     app.run(host=HOST, port=PORT, debug=DEBUG)
