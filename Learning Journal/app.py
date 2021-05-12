@@ -18,7 +18,7 @@ login_manager.login_view = "index"
 @login_manager.user_loader
 def load_user(user_id):
     try: 
-        User.get(User.user_id == user_id)
+        return User.get(User.user_id == user_id)
     except DoesNotExist:
         return None
 
@@ -46,8 +46,13 @@ def set_tags(tags, title):
 def index():
     entries = Entry.select()
     
-    user = User.get(User.username == "alexeastwood")
-    login_user(user)
+    try:
+        user = User.get(User.username == "alexeastwood")
+        login_user(user)
+    except:
+        print("nope")
+    else:
+        print("You should be logged in")
     
     return (render_template("index.html", entries=entries))
 
