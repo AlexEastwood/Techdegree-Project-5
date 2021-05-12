@@ -15,7 +15,7 @@ class Entry(Model):
 
     class Meta:
         database = DATABASE
-        
+
     def get_tags(self):
         return (
             Tag.select().join(
@@ -24,7 +24,6 @@ class Entry(Model):
                 EntryTags.entry == self
             )
         )
-        
 
     @classmethod
     def create_entry(cls, title, time_spent, learned, resources):
@@ -39,13 +38,13 @@ class Entry(Model):
         except IntegrityError:
             raise ValueError("Entry already exists")
 
-        
+
 class Tag(Model):
     tag_name = CharField(unique=True)
-    
+
     class Meta:
         database = DATABASE
-        
+
     @classmethod
     def create_entry(cls, tag_name):
         try:
@@ -55,24 +54,26 @@ class Tag(Model):
         except IntegrityError:
             raise ValueError("Entry already exists")
 
+
 class EntryTags(Model):
     entry = ForeignKeyField(Entry)
     tag = ForeignKeyField(Tag)
-    
+
     class Meta:
         database = DATABASE
-        
+
+
 class User(UserMixin, Model):
     user_id = AutoField()
     username = CharField(unique=True)
     password = CharField()
-    
+
     class Meta:
         database = DATABASE
-        
+
     def get_id(self):
-           return (self.user_id)
-        
+        return (self.user_id)
+
     @classmethod
     def create_user(cls, username, password):
         try:
@@ -83,6 +84,7 @@ class User(UserMixin, Model):
                 )
         except IntegrityError:
             raise ValueError("User already exists")
+
 
 def initialize():
     DATABASE.connect()

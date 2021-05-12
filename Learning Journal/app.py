@@ -3,7 +3,7 @@ from flask_login import LoginManager, login_user, login_required
 from models import Entry, Tag, EntryTags, initialize, User, DoesNotExist
 import forms
 
-#Variables for hosting the website locally
+# Variables for hosting the website locally
 DEBUG = True
 PORT = 8000
 HOST = "localhost"
@@ -15,20 +15,23 @@ login_manager = LoginManager()
 login_manager.init_app(app)
 login_manager.login_view = "index"
 
+
 @login_manager.user_loader
 def load_user(user_id):
-    try: 
+    try:
         return User.get(User.user_id == user_id)
     except DoesNotExist:
         return None
 
-#Deletes all tags currently associated with an entry, then writes the new set of tags
+
+# Deletes all tags currently associated with an entry,
+# then writes the new set of tags
 def set_tags(tags, title):
-    
+
     EntryTags.delete().where(
         EntryTags.entry == Entry.get(
             Entry.title == title)).execute()
-    
+
     tags = tags.split(", ")
     for tag in tags:
         print(tag)
@@ -42,10 +45,11 @@ def set_tags(tags, title):
             tag=Tag.get(Tag.tag_name == tag)
         )
 
+
 @app.route("/")
 def index():
     entries = Entry.select()
-    
+
     try:
         user = User.get(User.username == "alexeastwood")
         login_user(user)
@@ -53,7 +57,7 @@ def index():
         print("nope")
     else:
         print("You should be logged in")
-    
+
     return (render_template("index.html", entries=entries))
 
 
@@ -68,7 +72,7 @@ def tag_index(tag):
     for entry in EntryTags.select():
         if entry.tag.tag_name == tag:
             entries.append(entry.entry)
-        
+
     return (render_template("index.html", entries=entries))
 
 
@@ -78,9 +82,9 @@ def create_entry():
     form = forms.NewEntry()
     if form.validate_on_submit():
         Entry.create_entry(title=form.title.data.strip(),
-                                  time_spent=form.time_spent.data,
-                                  learned=form.learned.data.strip(),
-                                  resources=form.resources.data.strip())
+                           time_spent=form.time_spent.data,
+                           learned=form.learned.data.strip(),
+                           resources=form.resources.data.strip())
         if form.tags.data:
             set_tags(form.tags.data, form.title.data.strip())
 
@@ -98,10 +102,10 @@ def detailed_entry(entry_id):
 @login_required
 def edit_entry(entry_id):
     entry = Entry.get(Entry.entry_id == entry_id)
-    
+
     tags = ""
     for tag in entry.get_tags():
-        tags = tags + tag.tag_name +", "
+        tags = tags + tag.tag_name + ", "
     tags = tags[:-2]
     form = forms.NewEntry()
     if request.method == 'POST':
@@ -115,7 +119,7 @@ def edit_entry(entry_id):
             entry.learned = form.learned.data
             entry.resources = form.resources.data
             entry.save()
-            
+
             if form.tags.data:
                 set_tags(form.tags.data, form.title.data.strip())
             return redirect(url_for("index"))
@@ -133,7 +137,7 @@ if __name__ == "__main__":
         )
     except ValueError:
         pass
-    
+
     try:
         User.create_user(
             username="alexeastwood",
@@ -143,8 +147,5 @@ if __name__ == "__main__":
         print("You exist")
     else:
         print("You didn't exist but now you do")
-    
-    
-
 
     app.run(host=HOST, port=PORT, debug=DEBUG)
